@@ -1,0 +1,1851 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>September Grammar Exam Prep Studio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans JP', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            300: '#7dd3fc',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            dark: '#0f172a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        .card-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .7; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased">
+
+    <!-- App Container -->
+    <div id="app" class="flex-grow flex flex-col max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        
+        <!-- Top Nav & Header -->
+        <header class="bg-white rounded-2xl p-4 mb-6 card-shadow border border-slate-100 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-gradient-to-tr from-brand-500 to-indigo-600 rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-md">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold text-slate-800 tracking-tight flex items-center gap-2">
+                        <span>Exam Prep Studio</span>
+                        <span class="text-xs px-2 py-0.5 bg-rose-100 text-rose-700 font-semibold rounded-full uppercase animate-pulse-slow">Target: Sept</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Master Future & Perfect Tenses / 予定・未来・完了形を極める</p>
+                </div>
+            </div>
+
+            <!-- Global Accent and Language Selector -->
+            <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
+                <!-- TTS Voice Accent Picker -->
+                <div class="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-xl text-xs font-medium">
+                    <i class="fa-solid fa-microphone text-brand-500"></i>
+                    <span class="text-slate-500 mr-1">Voice:</span>
+                    <select id="accent-picker" class="bg-transparent font-semibold text-slate-700 outline-none cursor-pointer">
+                        <option value="en-US">🇺🇸 US English</option>
+                        <option value="en-GB">🇬🇧 UK English</option>
+                        <option value="en-AU">🇦🇺 AU English</option>
+                        <option value="en-IN">🇮🇳 IN English</option>
+                    </select>
+                </div>
+
+                <!-- Global Tri-lingual Language Picker -->
+                <div class="flex items-center gap-1 bg-indigo-50 p-1 rounded-xl">
+                    <button onclick="setGlobalLanguage('ja')" id="lang-btn-ja" class="px-3 py-1 rounded-lg text-xs font-bold transition-all bg-white text-indigo-700 shadow-sm">🇯🇵 日本語</button>
+                    <button onclick="setGlobalLanguage('en')" id="lang-btn-en" class="px-3 py-1 rounded-lg text-xs font-bold transition-all text-indigo-600 hover:bg-white/50">🇺🇸 English</button>
+                    <button onclick="setGlobalLanguage('zh')" id="lang-btn-zh" class="px-3 py-1 rounded-lg text-xs font-bold transition-all text-indigo-600 hover:bg-white/50">🇹🇼 繁體中文</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tab Bar Navigation -->
+        <nav class="flex overflow-x-auto gap-2 pb-3 mb-6 custom-scrollbar">
+            <button onclick="switchTab('guide')" id="tab-guide" class="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm transition-all bg-brand-600 text-white shadow-md shadow-brand-200 shrink-0">
+                <i class="fa-solid fa-book-open"></i> <span data-key="nav_classroom">Classroom / 解説</span>
+            </button>
+            <button onclick="switchTab('worksheets')" id="tab-worksheets" class="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm transition-all bg-white hover:bg-slate-100 text-slate-600 shrink-0">
+                <i class="fa-solid fa-file-signature"></i> <span data-key="nav_worksheets">Worksheets / ワークシート</span>
+            </button>
+            <button onclick="switchTab('past_participle')" id="tab-past_participle" class="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm transition-all bg-white hover:bg-slate-100 text-slate-600 shrink-0">
+                <i class="fa-solid fa-arrows-spin"></i> <span data-key="nav_participles">Participle Drill / 過去分詞特訓</span>
+            </button>
+            <button onclick="switchTab('time_attack')" id="tab-time_attack" class="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm transition-all bg-white hover:bg-slate-100 text-slate-600 shrink-0">
+                <i class="fa-solid fa-bolt"></i> <span data-key="nav_time_attack">Time Attack / スピード挑戦</span>
+            </button>
+            <button onclick="switchTab('translation')" id="tab-translation" class="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm transition-all bg-white hover:bg-slate-100 text-slate-600 shrink-0">
+                <i class="fa-solid fa-pen-fancy"></i> <span data-key="nav_writing">Express & Translate / 表現・翻訳</span>
+            </button>
+            <button onclick="switchTab('mock_exam')" id="tab-mock_exam" class="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm transition-all bg-white hover:bg-slate-100 text-slate-600 shrink-0">
+                <i class="fa-solid fa-file-lines"></i> <span data-key="nav_mock">Mock Exam / 模擬テスト</span>
+            </button>
+        </nav>
+
+        <!-- Main Workspace -->
+        <main class="flex-grow">
+            <!-- 1. Classroom & Guide Section -->
+            <section id="section-guide" class="space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left Menu: Grammar Subtopics -->
+                    <div class="bg-white rounded-2xl p-4 border border-slate-100 card-shadow h-fit space-y-2">
+                        <h3 class="text-sm font-bold text-slate-400 uppercase px-3 py-1 tracking-wider" data-key="guide_index_title">Select Lesson / レッスン目次</h3>
+                        <div class="space-y-1">
+                            <button onclick="showLesson(1)" id="lesson-btn-1" class="w-full text-left px-4 py-3 rounded-xl text-sm font-bold transition-all bg-brand-50 text-brand-700 border-l-4 border-brand-500">
+                                <span class="block text-xs text-brand-500">Lesson 1</span>
+                                <span data-key="lesson_1_title">Future Tense (will / be going to)</span>
+                            </button>
+                            <button onclick="showLesson(2)" id="lesson-btn-2" class="w-full text-left px-4 py-3 rounded-xl text-sm font-bold transition-all hover:bg-slate-50 text-slate-600">
+                                <span class="block text-xs text-slate-400">Lesson 2</span>
+                                <span data-key="lesson_2_title">Future Progressive (will be -ing)</span>
+                            </button>
+                            <button onclick="showLesson(3)" id="lesson-btn-3" class="w-full text-left px-4 py-3 rounded-xl text-sm font-bold transition-all hover:bg-slate-50 text-slate-600">
+                                <span class="block text-xs text-slate-400">Lesson 3</span>
+                                <span data-key="lesson_3_title">Time / Condition (when, if + present)</span>
+                            </button>
+                            <button onclick="showLesson(4)" id="lesson-btn-4" class="w-full text-left px-4 py-3 rounded-xl text-sm font-bold transition-all hover:bg-slate-50 text-slate-600">
+                                <span class="block text-xs text-slate-400">Lesson 4</span>
+                                <span data-key="lesson_4_title">Present Perfect (Completion & Experience)</span>
+                            </button>
+                            <button onclick="showLesson(5)" id="lesson-btn-5" class="w-full text-left px-4 py-3 rounded-xl text-sm font-bold transition-all hover:bg-slate-50 text-slate-600">
+                                <span class="block text-xs text-slate-400">Lesson 5</span>
+                                <span data-key="lesson_5_title">Present Perfect Progressive & Continuation</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel: Core Grammar Explanations & Accent-Specific Sentences -->
+                    <div class="lg:col-span-2 bg-white rounded-2xl p-6 border border-slate-100 card-shadow">
+                        <!-- Lesson Content Dynamic Container -->
+                        <div id="lesson-content">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Interactive Worksheets Section -->
+            <section id="section-worksheets" class="hidden space-y-6">
+                <!-- Worksheet Selector Header -->
+                <div class="bg-white rounded-2xl p-4 border border-slate-100 card-shadow flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-lg font-extrabold text-slate-800" data-key="worksheets_main_title">Interactive Practice Worksheets</h2>
+                        <p class="text-xs text-slate-500" data-key="worksheets_main_subtitle">Choose one of the 6 targeted worksheets to refine your skills.</p>
+                    </div>
+                    <!-- Select Dropdown -->
+                    <div class="flex items-center gap-2">
+                        <label for="worksheet-select" class="text-xs font-bold text-slate-500 uppercase" data-key="select_sheet_label">Sheet:</label>
+                        <select id="worksheet-select" onchange="loadSelectedWorksheet()" class="bg-slate-100 px-3 py-2 rounded-xl text-sm font-bold text-slate-700 outline-none border border-slate-200 cursor-pointer">
+                            <option value="1">WS 1: Future (will / be going to)</option>
+                            <option value="2">WS 2: Future Progressive</option>
+                            <option value="3">WS 3: when / if + Present</option>
+                            <option value="4">WS 4: Present Perfect (Completion & Exp)</option>
+                            <option value="5">WS 5: Continuation & Perfect Progressive</option>
+                            <option value="6">WS 6: Comprehensive Review (Exam Style)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Worksheet Area -->
+                <div id="worksheet-container" class="bg-white rounded-2xl p-6 border border-slate-100 card-shadow space-y-6">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </section>
+
+            <!-- 3. Past Participle Drill Section -->
+            <section id="section-past_participle" class="hidden">
+                <div class="max-w-3xl mx-auto bg-white rounded-2xl p-6 border border-slate-100 card-shadow space-y-6">
+                    <div class="text-center">
+                        <span class="px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full uppercase" data-key="drill_tag">Grammar Foundation</span>
+                        <h2 class="text-2xl font-extrabold text-slate-800 mt-2" data-key="drill_title">Verb Past Participle Drill (過去分詞特訓)</h2>
+                        <p class="text-xs text-slate-500 mt-1" data-key="drill_subtitle">Master all 20 crucial verbs directly from the upcoming exam.</p>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-slate-100 rounded-full h-2.5">
+                        <div id="drill-progress" class="bg-indigo-600 h-2.5 rounded-full transition-all duration-300" style="width: 5%"></div>
+                    </div>
+
+                    <!-- Card Interface -->
+                    <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 text-center space-y-6">
+                        <div class="text-xs font-bold text-slate-400 tracking-wider">
+                            <span data-key="verb_number">VERB</span> <span id="drill-index">1</span> / 20
+                        </div>
+                        <div class="text-4xl font-extrabold text-indigo-900 tracking-tight" id="drill-base-verb">
+                            eat
+                        </div>
+                        <div class="text-sm text-slate-500">
+                            Meaning: <span id="drill-verb-meaning">食べる</span>
+                        </div>
+
+                        <!-- User input form -->
+                        <div class="max-w-xs mx-auto space-y-3">
+                            <input type="text" id="drill-input" placeholder="Type past participle..." class="w-full px-4 py-3 rounded-xl border border-slate-200 text-center font-bold text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" autocomplete="off" onkeydown="if(event.key === 'Enter') checkDrillAnswer()">
+                            <button onclick="checkDrillAnswer()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl shadow-md transition-all">
+                                <span data-key="submit_btn">Submit Answer / 回答する</span>
+                            </button>
+                        </div>
+
+                        <!-- Feedback Message -->
+                        <div id="drill-feedback" class="h-8 font-bold text-sm"></div>
+                    </div>
+
+                    <!-- Statistics Bar -->
+                    <div class="flex items-center justify-around bg-slate-50 p-4 rounded-xl text-center text-xs font-bold text-slate-500">
+                        <div>
+                            <div class="text-lg text-emerald-600" id="drill-correct-count">0</div>
+                            <div data-key="correct_label">CORRECT</div>
+                        </div>
+                        <div>
+                            <div class="text-lg text-slate-700" id="drill-streak-count">0</div>
+                            <div data-key="streak_label">STREAK</div>
+                        </div>
+                        <button onclick="resetDrill()" class="text-slate-400 hover:text-slate-600 flex items-center gap-1 font-bold">
+                            <i class="fa-solid fa-arrow-rotate-left"></i> <span data-key="reset_btn">Reset</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Time Attack Quiz Section -->
+            <section id="section-time_attack" class="hidden">
+                <div class="max-w-2xl mx-auto bg-white rounded-2xl p-6 border border-slate-100 card-shadow space-y-6">
+                    <!-- Setup Screen -->
+                    <div id="quiz-setup" class="text-center space-y-6 py-8">
+                        <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center text-3xl mx-auto">
+                            <i class="fa-solid fa-stopwatch animate-pulse"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-extrabold text-slate-800" data-key="ta_title">Time Attack: Grammar Reflexes</h2>
+                            <p class="text-xs text-slate-500 max-w-sm mx-auto mt-2" data-key="ta_desc">
+                                Answer quickly! You have exactly 25 seconds per problem. Points decay over time: 5, 4, 3, 2, 1. Aim for a perfect 50!
+                            </p>
+                        </div>
+                        <button onclick="startQuiz()" class="bg-rose-600 hover:bg-rose-700 text-white font-extrabold px-8 py-4 rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5">
+                            <span data-key="start_game">START TIME ATTACK / 挑戦を始める</span>
+                        </button>
+                    </div>
+
+                    <!-- Gameplay Screen -->
+                    <div id="quiz-game" class="hidden space-y-6">
+                        <!-- Stat row -->
+                        <div class="flex items-center justify-between text-xs font-extrabold">
+                            <div class="flex items-center gap-1.5 text-slate-500">
+                                <span data-key="quiz_q">QUESTION</span> <span id="quiz-index">1</span>/10
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="text-amber-600 flex items-center gap-1">
+                                    <i class="fa-solid fa-trophy"></i> <span id="quiz-score">0</span> pts
+                                </div>
+                                <div class="text-rose-600 flex items-center gap-1">
+                                    <i class="fa-solid fa-hourglass-half"></i> <span id="quiz-timer">25</span>s
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Timer Bar -->
+                        <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                            <div id="quiz-timer-bar" class="bg-rose-500 h-1.5 transition-all duration-100" style="width: 100%"></div>
+                        </div>
+
+                        <!-- Question Prompt -->
+                        <div class="bg-slate-50 p-6 rounded-xl border border-slate-100">
+                            <p class="text-center text-xs text-slate-400 font-bold mb-2 uppercase" data-key="ta_instruction">Select correct phrase to complete the sentence:</p>
+                            <p class="text-lg font-bold text-center text-slate-800 leading-relaxed" id="quiz-question-text">
+                                We will soon ______ a brief stop at the next station.
+                            </p>
+                        </div>
+
+                        <!-- Multiple Choice Options -->
+                        <div id="quiz-options" class="grid grid-cols-1 gap-3">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- End/Result Screen -->
+                    <div id="quiz-result" class="hidden text-center space-y-6 py-8">
+                        <div class="text-4xl">🎉</div>
+                        <div>
+                            <h2 class="text-2xl font-extrabold text-slate-800" data-key="ta_finished">Time Attack Finished!</h2>
+                            <p class="text-xs text-slate-500 mt-1" id="quiz-final-score-text">You earned 42 out of 50 possible speed points.</p>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-xl max-w-xs mx-auto border border-slate-100">
+                            <div class="text-xs font-bold text-slate-400 uppercase" data-key="high_score_label">High Score</div>
+                            <div class="text-3xl font-black text-rose-600" id="quiz-high-score">0</div>
+                        </div>
+                        <div class="flex justify-center gap-3">
+                            <button onclick="startQuiz()" class="bg-slate-800 text-white font-extrabold px-6 py-3 rounded-xl hover:bg-slate-900 transition-all text-sm">
+                                <span data-key="retry_btn">Try Again / 再挑戦</span>
+                            </button>
+                            <button onclick="switchTab('guide')" class="bg-slate-100 text-slate-700 font-extrabold px-6 py-3 rounded-xl hover:bg-slate-200 transition-all text-sm">
+                                <span data-key="back_to_class">Back to Classroom</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Translation & Sentence Builder Section -->
+            <section id="section-translation" class="hidden space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Part A: Translation Lab (Sect 7 Prep) -->
+                    <div class="bg-white rounded-2xl p-6 border border-slate-100 card-shadow space-y-4">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-language text-brand-500 text-xl"></i>
+                            <h2 class="text-lg font-extrabold text-slate-800" data-key="trans_lab_title">Interactive Translation Lab</h2>
+                        </div>
+                        <p class="text-xs text-slate-500 leading-relaxed" data-key="trans_lab_subtitle">Practice English translation using our drag-and-drop / click-to-rebuild word scaffolding blocks to prepare for the Japanese translation section.</p>
+
+                        <!-- Problem Selector -->
+                        <div class="flex items-center gap-2 bg-slate-50 p-2 rounded-xl">
+                            <button onclick="changeTransProblem(0)" id="tp-btn-0" class="flex-1 py-2 rounded-lg font-bold text-xs bg-white text-brand-600 shadow-sm transition-all border border-slate-100">Q1</button>
+                            <button onclick="changeTransProblem(1)" id="tp-btn-1" class="flex-1 py-2 rounded-lg font-bold text-xs text-slate-500 hover:bg-white/50 transition-all">Q2</button>
+                            <button onclick="changeTransProblem(2)" id="tp-btn-2" class="flex-1 py-2 rounded-lg font-bold text-xs text-slate-500 hover:bg-white/50 transition-all">Q3</button>
+                            <button onclick="changeTransProblem(3)" id="tp-btn-3" class="flex-1 py-2 rounded-lg font-bold text-xs text-slate-500 hover:bg-white/50 transition-all">Q4</button>
+                        </div>
+
+                        <!-- Source Japanese -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-1">
+                            <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wide" data-key="translate_this">Translate This:</div>
+                            <div class="font-extrabold text-slate-800" id="trans-japanese-target">
+                                彼は今カラオケを歌っています。/ 彼は数時間ずっとカラオケを歌い続けています。
+                            </div>
+                        </div>
+
+                        <!-- Build Area -->
+                        <div class="space-y-2">
+                            <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wide" data-key="your_sentence">Your Sentence:</div>
+                            <div class="bg-slate-50 border-2 border-dashed border-slate-200 rounded-xl p-4 min-h-[80px] flex flex-wrap gap-2 items-center" id="trans-build-area">
+                                <!-- Placed items go here -->
+                            </div>
+                        </div>
+
+                        <!-- Available Blocks -->
+                        <div class="space-y-2">
+                            <div class="text-[10px] font-extrabold text-slate-400 uppercase tracking-wide" data-key="word_bank">Word Bank:</div>
+                            <div class="flex flex-wrap gap-2 p-3 bg-slate-50 rounded-xl border border-slate-100" id="trans-word-bank">
+                                <!-- Word buttons dynamically created -->
+                            </div>
+                        </div>
+
+                        <!-- Buttons & Feedback -->
+                        <div class="flex items-center justify-between gap-3 pt-2">
+                            <button onclick="resetTransProblem()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold text-xs transition-all flex items-center gap-1">
+                                <i class="fa-solid fa-arrow-rotate-left"></i> <span data-key="reset_btn">Reset</span>
+                            </button>
+                            <button onclick="checkTransAnswer()" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-extrabold text-xs transition-all flex items-center gap-1.5 shadow-md">
+                                <i class="fa-solid fa-circle-check"></i> <span data-key="check_btn">Verify Answer</span>
+                            </button>
+                        </div>
+                        <div id="trans-feedback" class="h-8 font-bold text-xs"></div>
+                    </div>
+
+                    <!-- Part B: Composition Scaffolder (Sect 8 Prep) -->
+                    <div class="bg-white rounded-2xl p-6 border border-slate-100 card-shadow space-y-4">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-pen-fancy text-indigo-500 text-xl"></i>
+                            <h2 class="text-lg font-extrabold text-slate-800" data-key="writing_scaffold_title">English Essay Scaffolder</h2>
+                        </div>
+                        <p class="text-xs text-slate-500 leading-relaxed" data-key="writing_scaffold_subtitle">Create logical English sentences and full holiday essay structures by completing our real-time interactive framework.</p>
+
+                        <!-- Step 1: Framework Choice -->
+                        <div class="space-y-3">
+                            <label class="text-xs font-bold text-slate-500 uppercase block" data-key="scaffold_choose_pattern">Choose Writing Pattern:</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="setScaffoldPattern('future')" id="sc-btn-future" class="py-2.5 px-3 rounded-xl font-bold text-xs bg-indigo-50 text-indigo-700 border border-indigo-200 transition-all text-left">
+                                    <span class="block opacity-75">Pattern A</span>
+                                    Future Plans (will / be going to)
+                                </button>
+                                <button onclick="setScaffoldPattern('perfect')" id="sc-btn-perfect" class="py-2.5 px-3 rounded-xl font-bold text-xs text-slate-600 hover:bg-slate-50 border border-slate-200 transition-all text-left">
+                                    <span class="block opacity-75">Pattern B</span>
+                                    Present Perfect (Experience / Duration)
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic interactive form helper -->
+                        <div id="scaffold-form-container" class="space-y-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                            <!-- Populated dynamically by JS -->
+                        </div>
+
+                        <!-- Generated Sentence Output -->
+                        <div class="bg-indigo-900 text-indigo-100 p-4 rounded-xl space-y-2 shadow-inner">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-bold text-indigo-300 uppercase tracking-wider" data-key="scaffold_output_label">Compiled Composition Output</span>
+                                <button onclick="copyCompositionText()" class="text-xs text-indigo-300 hover:text-white flex items-center gap-1 font-bold">
+                                    <i class="fa-solid fa-copy"></i> <span data-key="copy_btn">Copy Text</span>
+                                </button>
+                            </div>
+                            <p id="scaffold-output-text" class="text-sm font-medium leading-relaxed italic">
+                                Loading interactive pattern...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. Mock Exam Section -->
+            <section id="section-mock_exam" class="hidden space-y-6">
+                <!-- Start Screen -->
+                <div id="mock-start" class="max-w-2xl mx-auto bg-white rounded-2xl p-8 border border-slate-100 card-shadow text-center space-y-6">
+                    <div class="w-16 h-16 bg-slate-100 text-slate-800 rounded-full flex items-center justify-center text-3xl mx-auto">
+                        <i class="fa-solid fa-file-invoice"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-extrabold text-slate-800" data-key="mock_start_title">Full September Mock Exam (70 Points)</h2>
+                        <p class="text-xs text-slate-500 max-w-sm mx-auto mt-2" data-key="mock_start_desc">
+                            A complete simulation covering all 8 parts of the actual exam layout. Test your comprehensive grammar knowledge now!
+                        </p>
+                    </div>
+                    <button onclick="startMockExam()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-8 py-4 rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5">
+                        <span data-key="start_mock_btn">START MOCK EXAM / 模擬テスト開始</span>
+                    </button>
+                </div>
+
+                <!-- Live Exam Area -->
+                <div id="mock-exam-live" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left index column -->
+                    <div class="bg-white rounded-2xl p-4 border border-slate-100 card-shadow h-fit space-y-4">
+                        <h3 class="text-sm font-extrabold text-slate-800 uppercase tracking-wider" data-key="mock_nav_title">Exam Structure</h3>
+                        <div class="space-y-1 text-xs font-bold text-slate-500">
+                            <div class="flex items-center justify-between p-2 rounded-lg bg-slate-50 text-indigo-700" id="mock-nav-part-1">
+                                <span>Part 1: Future Tense fill-in</span>
+                                <span>10 pts</span>
+                            </div>
+                            <div class="flex items-center justify-between p-2 rounded-lg" id="mock-nav-part-2">
+                                <span>Part 2: Future Progressive</span>
+                                <span>10 pts</span>
+                            </div>
+                            <div class="flex items-center justify-between p-2 rounded-lg" id="mock-nav-part-3">
+                                <span>Part 3: Past Participle Drill</span>
+                                <span>20 pts</span>
+                            </div>
+                            <div class="flex items-center justify-between p-2 rounded-lg" id="mock-nav-part-4">
+                                <span>Part 4: Present Perfect fill-in</span>
+                                <span>10 pts</span>
+                            </div>
+                            <div class="flex items-center justify-between p-2 rounded-lg" id="mock-nav-part-5">
+                                <span>Part 5: Continuation perfect</span>
+                                <span>10 pts</span>
+                            </div>
+                            <div class="flex items-center justify-between p-2 rounded-lg" id="mock-nav-part-6">
+                                <span>Part 6: Structural ordering</span>
+                                <span>20 pts</span>
+                            </div>
+                            <div class="flex items-center justify-between p-2 rounded-lg" id="mock-nav-part-7">
+                                <span>Part 7: Translation Comprehension</span>
+                                <span>8 pts</span>
+                            </div>
+                            <div class="flex items-center justify-between p-2 rounded-lg" id="mock-nav-part-8">
+                                <span>Part 8: Free Writing Scaffolds</span>
+                                <span>12 pts</span>
+                            </div>
+                        </div>
+                        <button onclick="submitMockExam()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold py-3 rounded-xl shadow-md transition-all">
+                            <span data-key="submit_exam_btn">Submit All Answers</span>
+                        </button>
+                    </div>
+
+                    <!-- Right Questions column -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- Questions Box -->
+                        <div id="mock-questions-container" class="bg-white rounded-2xl p-6 border border-slate-100 card-shadow space-y-8">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Screen -->
+                <div id="mock-results" class="hidden max-w-2xl mx-auto bg-white rounded-2xl p-8 border border-slate-100 card-shadow space-y-6">
+                    <div class="text-center space-y-2">
+                        <div class="text-5xl">🏆</div>
+                        <h2 class="text-2xl font-extrabold text-slate-800" data-key="exam_graded_title">Mock Exam Graded!</h2>
+                        <p class="text-xs text-slate-500" data-key="exam_graded_subtitle">Excellent review. Check your section scores below.</p>
+                    </div>
+
+                    <!-- Grading Cards -->
+                    <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 uppercase" data-key="your_score_label">Overall Score</span>
+                            <div class="text-5xl font-black text-indigo-600" id="mock-score-text">0 / 100</div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs font-bold text-slate-400 uppercase" data-key="rank_label">Performance</span>
+                            <div class="text-2xl font-bold text-slate-800" id="mock-rank-text">Excellent!</div>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Correction Section -->
+                    <div class="space-y-4">
+                        <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider" data-key="review_mistakes_label">Review Errors & Solutions</h3>
+                        <div id="mock-error-logs" class="space-y-3">
+                            <!-- Dynamically generated list of errors and standard answers -->
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center gap-3">
+                        <button onclick="startMockExam()" class="bg-indigo-600 text-white font-extrabold px-6 py-3 rounded-xl hover:bg-indigo-700 transition-all text-sm">
+                            <span data-key="retry_btn">Try Again</span>
+                        </button>
+                        <button onclick="switchTab('guide')" class="bg-slate-100 text-slate-700 font-extrabold px-6 py-3 rounded-xl hover:bg-slate-200 transition-all text-sm">
+                            <span data-key="back_to_class">Back to Classroom</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="mt-8 text-center text-xs text-slate-400 border-t border-slate-200/60 pt-4">
+            <p>© 2026 September Exam Prep Studio • Tri-lingual English Grammar Companion</p>
+        </footer>
+    </div>
+
+    <!-- Sound Effect Fallback Core Script -->
+    <script>
+        // Simulated sound effect generator using ToneJS or Native Web Audio API so it's fully clean & standalone!
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(type) {
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                if (type === 'correct') {
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                } else if (type === 'wrong') {
+                    osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+                    osc.frequency.setValueAtTime(147, audioCtx.currentTime + 0.1); // D3
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.4);
+                } else if (type === 'click') {
+                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.05);
+                }
+            } catch (e) {
+                console.log("Audio not enabled yet or blocked");
+            }
+        }
+
+        // TEXT TO SPEECH AUDIO ENGINE
+        function speakSentence(text) {
+            if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                const picker = document.getElementById('accent-picker');
+                const selectedLang = picker.value || 'en-US';
+                
+                utterance.lang = selectedLang;
+                
+                // Dynamically fetch matching voices
+                const voices = window.speechSynthesis.getVoices();
+                const matchedVoice = voices.find(v => v.lang.startsWith(selectedLang.substring(0, 5)));
+                if (matchedVoice) {
+                    utterance.voice = matchedVoice;
+                }
+                
+                window.speechSynthesis.speak(utterance);
+            } else {
+                console.log("Speech synthesis not supported in this browser");
+            }
+        }
+
+        // Ensure voices are loaded
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => {
+                console.log("TTS Voices loaded");
+            };
+        }
+    </script>
+
+    <script>
+        // Dynamic Localization Dictionary
+        const localizationDict = {
+            ja: {
+                nav_classroom: "Classroom / 授業解説",
+                nav_worksheets: "Worksheets / ワークシート",
+                nav_participles: "Participle Trainer / 過去分詞特訓",
+                nav_time_attack: "Time Attack / タイムアタック",
+                nav_writing: "Write & Translate / 表現・翻訳",
+                nav_mock: "Mock Exam / 模擬試験",
+                guide_index_title: "Lessons / 学習インデックス",
+                lesson_1_title: "未来形 (will / be going to)",
+                lesson_2_title: "未来進行形 (will be + -ing)",
+                lesson_3_title: "接続詞 (when / if) のあとの現在形",
+                lesson_4_title: "現在完了形 (完了・結果・経験)",
+                lesson_5_title: "現在完了進行形 & 継続状態",
+                worksheets_main_title: "インタラクティブ・ワークシート",
+                worksheets_main_subtitle: "テストに出る6つの主要セクションを極めましょう！自動添削機能付き。",
+                select_sheet_label: "シート選択:",
+                drill_tag: "過去分詞 (過去・過去分詞のルール)",
+                drill_title: "過去分詞形スペル特訓",
+                drill_subtitle: "実際のテストに出題される20個の最重要動詞をマスターしましょう。",
+                verb_number: "動詞番号",
+                submit_btn: "回答する",
+                correct_label: "正解数",
+                streak_label: "連勝記録",
+                reset_btn: "やり直す",
+                ta_title: "タイムアタック・クイズ！",
+                ta_desc: "25秒以内に入力・選択せよ！早く解答するほど、高得点（5, 4, 3, 2, 1）が得られます。めざせ50点！",
+                start_game: "タイムアタックに挑戦",
+                quiz_q: "問題",
+                ta_instruction: "文脈に合う最も適切なフレーズを選択しなさい：",
+                ta_finished: "タイムアタック終了！",
+                high_score_label: "最高スコア",
+                retry_btn: "もう一度挑戦",
+                back_to_class: "学習クラスに戻る",
+                trans_lab_title: "翻訳特訓ラボ",
+                trans_lab_subtitle: "単語ブロックをクリック・ドラッグして、正しい順番で英文を構築しましょう。英作文の基礎作りに最適です。",
+                translate_this: "日本語のお題:",
+                your_sentence: "あなたの作った英文:",
+                word_bank: "単語バンク:",
+                check_btn: "回答をチェック",
+                writing_scaffold_title: "作文構成スキャフォルダー",
+                writing_scaffold_subtitle: "フォームのヒントに従って空欄を埋めるだけで、ネイティブのような完璧な「休日の予定エッセイ」が完成します！",
+                scaffold_choose_pattern: "構成パターンを選ぶ:",
+                scaffold_output_label: "完成した英文エッセイ:",
+                copy_btn: "テキストをコピー",
+                mock_start_title: "完全模擬試験 (合計100点換算)",
+                mock_start_desc: "本番の September 試験と全く同じ形式・セクション構造（全8パート）で構成された模擬テストです。今すぐ実力を試そう！",
+                start_mock_btn: "模擬テストを受ける",
+                mock_nav_title: "テスト構成一覧",
+                submit_exam_btn: "すべての解答を提出する",
+                exam_graded_title: "模擬テストの採点結果",
+                exam_graded_subtitle: "よく頑張りました！以下で間違えた箇所と解説、模範解答を確認できます。",
+                your_score_label: "総合得点",
+                rank_label: "判定結果",
+                review_mistakes_label: "間違いの分析と改善アドバイス"
+            },
+            en: {
+                nav_classroom: "Classroom Guide",
+                nav_worksheets: "Worksheets",
+                nav_participles: "Participle Trainer",
+                nav_time_attack: "Time Attack",
+                nav_writing: "Write & Translate",
+                nav_mock: "Mock Exam",
+                guide_index_title: "Lesson Index",
+                lesson_1_title: "Future (will / be going to)",
+                lesson_2_title: "Future Progressive (will be -ing)",
+                lesson_3_title: "Adverb Clauses (when / if)",
+                lesson_4_title: "Present Perfect (Exp / Completion)",
+                lesson_5_title: "Perfect Progressive & Duration",
+                worksheets_main_title: "Interactive Grammar Worksheets",
+                worksheets_main_subtitle: "Train on 6 customized digital worksheets covering target exam goals.",
+                select_sheet_label: "Sheet:",
+                drill_tag: "Drill Foundation",
+                drill_title: "Past Participle Trainer",
+                drill_subtitle: "Input past participle forms for all 20 crucial target verbs.",
+                verb_number: "VERB NO.",
+                submit_btn: "Submit Answer",
+                correct_label: "CORRECT",
+                streak_label: "STREAK",
+                reset_btn: "Reset Drill",
+                ta_title: "Grammar Time Attack!",
+                ta_desc: "25-second limit. Answer fast to earn maximum points (5 down to 1). Aim for 50!",
+                start_game: "Start Time Attack",
+                quiz_q: "QUESTION",
+                ta_instruction: "Pick the correct option to fill the blank:",
+                ta_finished: "Time Attack Finished!",
+                high_score_label: "HIGHEST SCORE",
+                retry_btn: "Retry Game",
+                back_to_class: "Back to Guide",
+                trans_lab_title: "Translation Builder Lab",
+                trans_lab_subtitle: "Construct accurate English translations by clicking the word blocks in order.",
+                translate_this: "Japanese Source Phrase:",
+                your_sentence: "Your Constructed Sentence:",
+                word_bank: "Word Bank:",
+                check_btn: "Verify Translation",
+                writing_scaffold_title: "Composition Scaffolder",
+                writing_scaffold_subtitle: "Input your ideas to build a cohesive composition based on PPT study frames.",
+                scaffold_choose_pattern: "Choose Framework:",
+                scaffold_output_label: "Your Compiled Essay Text:",
+                copy_btn: "Copy To Clipboard",
+                mock_start_title: "Full Simulated Sept Mock Exam",
+                mock_start_desc: "Full comprehensive paper covering Sections 1-8 of the September exam with authentic questions.",
+                start_mock_btn: "Begin Mock Exam",
+                mock_nav_title: "Mock Structure",
+                submit_exam_btn: "Submit Final Exam",
+                exam_graded_title: "Mock Exam Graded!",
+                exam_graded_subtitle: "Let's check your results and review the comprehensive answers.",
+                your_score_label: "OVERALL SCORE",
+                rank_label: "BAND RANK",
+                review_mistakes_label: "Detailed Mistakes Analysis"
+            },
+            zh: {
+                nav_classroom: "課堂教學 / 解析",
+                nav_worksheets: "數位工作單",
+                nav_participles: "過去分詞特訓",
+                nav_time_attack: "限時挑戰賽",
+                nav_writing: "寫作與翻譯",
+                nav_mock: "全真模擬考",
+                guide_index_title: "課程目錄",
+                lesson_1_title: "未來式 (will / be going to)",
+                lesson_2_title: "未來進行式 (will be -ing)",
+                lesson_3_title: "副詞子句 (when / if) 用現在式",
+                lesson_4_title: "現在完成式 (經驗 / 結束)",
+                lesson_5_title: "完成進行式與持續狀態",
+                worksheets_main_title: "互動式數位工作單",
+                worksheets_main_subtitle: "完成考前客製的6個練習主題，附自動批改與詳盡解析。",
+                select_sheet_label: "工作單:",
+                drill_tag: "分詞基礎強化",
+                drill_title: "動詞過去分詞熟練度特訓",
+                drill_subtitle: "徹底掌握考卷中出現的20個核心動詞 past participle 形。",
+                verb_number: "動詞序號",
+                submit_btn: "提交回答",
+                correct_label: "正確數",
+                streak_label: "連續答對",
+                reset_btn: "重新開始",
+                ta_title: "文法反射神經挑戰！",
+                ta_desc: "限時25秒！回答越快，得分越高（5分漸降至1分）。目標衝破50滿分！",
+                start_game: "開始極速挑戰",
+                quiz_q: "當前題目",
+                ta_instruction: "選擇最適當的英文句型：",
+                ta_finished: "挑戰結束！",
+                high_score_label: "最高紀錄",
+                retry_btn: "重新挑戰",
+                back_to_class: "回到教學區",
+                trans_lab_title: "翻譯句型重組實驗室",
+                trans_lab_subtitle: "點選下方單字方塊拼出正確英文，完美擊破考試第七大題。",
+                translate_this: "中文原文句型:",
+                your_sentence: "你拼出的英文句子:",
+                word_bank: "單字庫:",
+                check_btn: "驗證翻譯答案",
+                writing_scaffold_title: "考題寫作鷹架引導區",
+                writing_scaffold_subtitle: "填入個人素材，為第八大題高分寫作做好十足準備！",
+                scaffold_choose_pattern: "選擇作文版型:",
+                scaffold_output_label: "最終合成作文成品:",
+                copy_btn: "複製文字",
+                mock_start_title: "全真九月模擬考 (總計100分)",
+                mock_start_desc: "完整模擬九月份定期考查全卷八大部分（Part 1-8），完美體驗考題型態。",
+                start_mock_btn: "開始全真考查",
+                mock_nav_title: "考卷大綱與配分",
+                submit_exam_btn: "提交整份考卷",
+                exam_graded_title: "模擬考成績結算",
+                exam_graded_subtitle: "辛勤的汗水必有收穫！以下提供詳細出錯點與參考解析。",
+                your_score_label: "本次得分",
+                rank_label: "評價等級",
+                review_mistakes_label: "詳細錯題回顧與訂正"
+            }
+        };
+
+        let currentLang = 'ja';
+
+        function setGlobalLanguage(lang) {
+            currentLang = lang;
+            playSound('click');
+            
+            // Toggle button states
+            ['ja', 'en', 'zh'].forEach(l => {
+                const btn = document.getElementById(`lang-btn-${l}`);
+                if (l === lang) {
+                    btn.className = "px-3 py-1 rounded-lg text-xs font-bold transition-all bg-white text-indigo-700 shadow-sm";
+                } else {
+                    btn.className = "px-3 py-1 rounded-lg text-xs font-bold transition-all text-indigo-600 hover:bg-white/50";
+                }
+            });
+
+            // Update UI components dynamically
+            document.querySelectorAll('[data-key]').forEach(elem => {
+                const key = elem.getAttribute('data-key');
+                if (localizationDict[lang][key]) {
+                    elem.textContent = localizationDict[lang][key];
+                }
+            });
+
+            // Re-render variable text parts
+            renderClassroom();
+            loadSelectedWorksheet();
+            renderTranslationProblem();
+            renderScaffoldForm();
+        }
+    </script>
+
+    <script>
+        // Static database for Classroom explanation lessons
+        const classroomDatabase = {
+            1: {
+                ja: {
+                    title: "Lesson 1: 未来を表す表現 (will / be going to)",
+                    explanation: "「～するつもりだ」「～だろう」などの未来の事柄は，助動詞 <b>will</b> や <b>be going to</b> を使って表現します。この2つは似ていますが，使う状況（ニュアンス）に明確な違いがあります。<br><br><b>① will ＋動詞原形 (2語)：</b><br>・「きっと～する」と，<b>その時点で決めたこと・しようと思ったこと</b>を表します。<br>・客観的に「そうなるだろう」という予想も will を使います。<br><i>例：I will call you tonight. (今夜、電話するね[その場で決めた])</i><br><br><b>② be going to ＋動詞原形 (4語)：</b><br>・<b>「そうするとすでに決めていること」</b>（予定・準備がすんでいること）を表します。<br><i>例：I'm going to play UNO tonight. (今夜UNOをする予定です[前から決めている])</i>",
+                    sentences: [
+                        { en: "I will call you tonight.", jp: "今夜、あなたに電話をします。（その場で決めた意思）" },
+                        { en: "My father will come home late tonight.", jp: "父は今夜、帰りが遅くなります。（話し手の予想）" },
+                        { en: "I am going to join the badminton club.", jp: "私はバドミントン部に入るつもりです。（すでに心に決めていること）" },
+                        { en: "I am not going to live in Canada.", jp: "私はカナダに住むつもりはありません。（事前の予定の否定）" }
+                    ]
+                },
+                en: {
+                    title: "Lesson 1: Talking About the Future (will / be going to)",
+                    explanation: "Future events are expressed using <b>will</b> or <b>be going to</b>. Though similar, they have distinct functions:<br><br><b>① will + verb base (2 words):</b><br>Used for spontaneous decisions made at the moment of speaking, or objective predictions.<br><i>Example: I will call you tonight. (Spontaneous)</i><br><br><b>② be going to + verb base (4 words):</b><br>Used for pre-planned actions/intentions decided before speaking.<br><i>Example: I'm going to play UNO tonight. (Pre-arranged plan)</i>",
+                    sentences: [
+                        { en: "I will call you tonight.", jp: "I will call you tonight. (Spontaneous decision)" },
+                        { en: "My father will come home late tonight.", jp: "My father will come home late tonight. (Prediction)" },
+                        { en: "I am going to join the badminton club.", jp: "I'm going to join the badminton club. (Prior intention)" },
+                        { en: "I am not going to live in Canada.", jp: "I'm not going to live in Canada. (Negative intention)" }
+                    ]
+                },
+                zh: {
+                    title: "Lesson 1: 表達未來的句型 (will / be going to)",
+                    explanation: "表達「打算做某事」或「將會發生某事」等未來情況時，會使用助動詞 <b>will</b> 或 <b>be going to</b>。這兩者在語氣上存在明確差異：<br><br><b>① will ＋ 動詞原型 (2個字)：</b><br>・表示<b>說話當下才決定做某事</b>（臨時起意）或表示對於未來的預測。<br><i>例：I will call you tonight. (我今晚打給你 [當下決定])</i><br><br><b>② be going to ＋ 動詞原型 (4個字)：</b><br>・表示<b>說話前已經計劃好、決定好的事情</b>（意圖、既定計畫）。<br><i>例：I'm going to play UNO tonight. (我今晚打算玩UNO [早就約好])</i>",
+                    sentences: [
+                        { en: "I will call you tonight.", jp: "我今晚會打電話給你。（當下做出的決定）" },
+                        { en: "My father will come home late tonight.", jp: "我父親今晚會很晚回家。（說話者的預測）" },
+                        { en: "I am going to join the badminton club.", jp: "我打算加入羽球社。（已經決定的計畫）" },
+                        { en: "I am not going to live in Canada.", jp: "我不打算住在加拿大。（否定既定計畫）" }
+                    ]
+                }
+            },
+            2: {
+                ja: {
+                    title: "Lesson 2: 未来進行形 (will be ＋ -ing)",
+                    explanation: "未来のある時点で<b>「しているであろうこと」</b>や，すでに<b>「することになっていること（確定した予定）」</b>を表すときは，<b>〈will be ＋ 動詞のing形〉</b>（未来進行形）を使います。<br><br>・未来の進行状態を生き生きと表します。<br>・個人の意思を超えて、自然の流れで決まっている客観的な未来の予定によく使われます。<br><i>例：I'll be studying for the exam at this time tomorrow.<br>(明日の今頃，私は試験勉強をしている最中でしょう。)</i>",
+                    sentences: [
+                        { en: "I'll be studying for the exam at this time tomorrow.", jp: "明日の今頃，私は試験勉強をしているでしょう。" },
+                        { en: "We'll be staying here for a couple of weeks.", jp: "私たちはここに2, 3週間滞在することになっています。" },
+                        { en: "In London, I will be meeting my family.", jp: "ロンドンで、私は家族と会うことになっています。" }
+                    ]
+                },
+                en: {
+                    title: "Lesson 2: Future Progressive (will be + -ing)",
+                    explanation: "To express an action that will be <b>ongoing at a specific point in the future</b> or <b>planned occurrences</b>, use the <b>Future Progressive (will be + -ing)</b> form.<br><br>・Emphasizes ongoing action at a future moment.<br>・Often used to describe a scheduled course of events naturally taking place.<br><i>Example: I'll be studying for the exam at this time tomorrow.</i>",
+                    sentences: [
+                        { en: "I'll be studying for the exam at this time tomorrow.", jp: "I will be studying for the exam at this time tomorrow." },
+                        { en: "We'll be staying here for a couple of weeks.", jp: "We will be staying here for a couple of weeks." },
+                        { en: "In London, I will be meeting my family.", jp: "In London, I will be meeting my family." }
+                    ]
+                },
+                zh: {
+                    title: "Lesson 2: 未來進行式 (will be ＋ -ing)",
+                    explanation: "當要表示在未來某個特定時間點<b>「正在進行的動作」</b>或<b>「預計要發生的既定行程」</b>時，使用未來進行式<b>〈will be ＋ 現在分詞ing〉</b>。<br><br>・描繪未來某個時間點正在發生的生動情境。<br>・常用於說明非個人一時興起，而是自然發生或已確定安排好的未來事項。<br><i>例：I'll be studying for the exam at this time tomorrow.<br>(明天這個時候，我應該正在準備考試吧。)</i>",
+                    sentences: [
+                        { en: "I'll be studying for the exam at this time tomorrow.", jp: "明天這個時候，我應該正在準備考試。" },
+                        { en: "We'll be staying here for a couple of weeks.", jp: "我們計畫要在這裡待上兩三個星期。" },
+                        { en: "In London, I will be meeting my family.", jp: "在倫敦，我預計會跟我的家人見面。" }
+                    ]
+                }
+            },
+            3: {
+                ja: {
+                    title: "Lesson 3: 時や条件を表す副詞節での現在形使用 (when / if)",
+                    explanation: "「～したら」「～するとき」という<b>「未来のこと（これからのこと）」</b>を、時を表す接続詞 <b>when</b> や 条件を表す <b>if</b> などを使って文（副詞節）にする場合，その文の中では<b>未来のことでも will を使わず現在形</b>で表すという鉄則があります。<br><br>・主節（メインの文）は will などの未来表現をそのまま使います。<br><i>例：If it rains tomorrow, we'll hold the ceremony in the gym.<br>(もし明日雨なら[現在形], 体育館で式を行います[未来形]。)</i>",
+                    sentences: [
+                        { en: "We'll start the meeting when our teacher comes back.", jp: "先生が戻ってきたら（とき）ミーティングを始めます。(comesは現在形)" },
+                        { en: "If it rains tomorrow, we'll hold the ceremony in the gym.", jp: "明日雨なら（条件）、式典は体育館で行います。(rainsは現在形)" },
+                        { en: "I will go to Mito when I have some free time.", jp: "時間があるときに、水戸に行くつもりです。(haveは現在形)" }
+                    ]
+                },
+                en: {
+                    title: "Lesson 3: Present Tense in Time / Condition Clauses (when / if)",
+                    explanation: "When describing a future action in a subordinate clause of <b>time (when, after, until)</b> or <b>condition (if)</b>, you <b>must use the Present Tense</b>, not the future tense (will).<br><br>・Note that the main independent clause still uses future forms like will.<br><i>Example: If it rains tomorrow, we will hold the ceremony in the gym. (not: 'If it will rain')</i>",
+                    sentences: [
+                        { en: "We'll start the meeting when our teacher comes back.", jp: "We will start the meeting when our teacher comes back. (comes is present)" },
+                        { en: "If it rains tomorrow, we'll hold the ceremony in the gym.", jp: "If it rains tomorrow, we will hold the ceremony in the gym. (rains is present)" },
+                        { en: "I will go to Mito when I have some free time.", jp: "I will go to Mito when I have some free time. (have is present)" }
+                    ]
+                },
+                zh: {
+                    title: "Lesson 3: 時間與條件副詞子句中用現在式代替未來式 (when / if)",
+                    explanation: "當使用表示時間的連接詞 <b>when</b> 或表示條件的 <b>if</b> 來引導一個代表「未來要發生的情況」的子句（副詞子句）時，有一個非常重要的鐵律：<b>該子句中必須使用「現在式」來代替「未來式」</b>（絕不能加 will）。<br><br>・主句（主要句子）仍照常使用 will 等未來式表達。<br><i>例：If it rains tomorrow, we'll hold the ceremony in the gym.<br>(如果明天明天下雨[現在式], 我們將在體育館舉辦典禮[未來式]。)</i>",
+                    sentences: [
+                        { en: "We'll start the meeting when our teacher comes back.", jp: "當老師回來時，我們就會開始開會。(comes 為現在式)" },
+                        { en: "If it rains tomorrow, we'll hold the ceremony in the gym.", jp: "如果明天下雨，我們將在體育館舉辦典禮。(rains 為現在式)" },
+                        { en: "I will go to Mito when I have some free time.", jp: "當我有空的時候，我會去水戸。(have 為現在式)" }
+                    ]
+                }
+            },
+            4: {
+                ja: {
+                    title: "Lesson 4: 現在完了形 (have / has ＋ 過去分詞) — 完了・結果・経験",
+                    explanation: "現在完了形 <b>〈have/has ＋ 過去分詞〉</b> は、過去の出来事が<b>「現在とどのようにつながっているか」</b>を表す時制です。大きく分けて次の3つの用法があります。<br><br><b>① 完了・結果（～してしまった、ちょうど～したところだ）：</b><br>・すでに動作が終わって，その結果としての現在の状態を表します。<br>・よく一緒に使う副詞：<b>already</b>（すでに），<b>just</b>（ちょうど），<b>yet</b>（[否定文で]まだ、[疑問文で]もう）<br><i>例：I have already finished my homework. (宿題をもうやり終えました[今、遊べる])</i><br><br><b>② 経験（～したことがある）：</b><br>・これまでの人生で「～したことがある」という経験を表します。<br>・よく一緒に使う副詞：<b>before</b>（以前に），<b>once / twice / times</b>（1回/2回/～回），<b>ever</b>（今までに），<b>never</b>（一度もない）<br><i>例：I have been to Hawaii twice. (ハワイに2回行ったことがある)</i>",
+                    sentences: [
+                        { en: "I have met the mayor before.", jp: "私は以前，市長に会ったことがある。（経験）" },
+                        { en: "He has never eaten oysters.", jp: "彼は一度もカキ（牡蠣）を食べたことがない。（経験）" },
+                        { en: "We have already bought the tickets.", jp: "私たちはすでにチケットを買った。（完了）" },
+                        { en: "The train has already left.", jp: "列車はすでに出発してしまいました。（結果・今はここにもう居ない）" }
+                    ]
+                },
+                en: {
+                    title: "Lesson 4: Present Perfect (have / has + Past Participle)",
+                    explanation: "The Present Perfect <b>〈have/has + past participle〉</b> connects a past event with the <b>present situation</b>. It has three primary uses:<br><br><b>① Completion / Result (has done / just finished):</b><br>Actions completed recently, affecting the present state.<br>Key adverbs: <b>already, just, yet</b>.<br><i>Example: We have already bought the tickets.</i><br><br><b>② Experience (has ever done before):</b><br>Actions experienced in life up to now.<br>Key adverbs: <b>ever, never, before, once, twice, many times</b>.<br><i>Example: I have met the mayor before.</i>",
+                    sentences: [
+                        { en: "I have met the mayor before.", jp: "I have met the mayor before. (Experience)" },
+                        { en: "He has never eaten oysters.", jp: "He has never eaten oysters. (Experience)" },
+                        { en: "We have already bought the tickets.", jp: "We have already bought the tickets. (Completion)" },
+                        { en: "The train has already left.", jp: "The train has already left. (Result)" }
+                    ]
+                },
+                zh: {
+                    title: "Lesson 4: 現在完成式 (have / has ＋ 過去分詞)",
+                    explanation: "現在完成式<b>〈have/has ＋ 過去分詞〉</b>主要用來表示過去發生的事情<b>與「現在」的連結關係</b>。主要有以下用法：<br><br><b>① 結束・結果（已經做完、剛做完某事）：</b><br>・表示動作已經完成，並對現在產生了某種影響或結果。<br>・常搭配副詞：<b>already</b>（已經）、<b>just</b>（剛剛）、<b>yet</b>（[否定句]尚未、[疑問句]已經）。<br><i>例：I have already finished my homework. (我已經做完功課了 [現在可以玩了])</i><br><br><b>② 經驗（曾經做過某事）：</b><br>・表示到目前為止的人生中「有過某種體驗」。<br>・常搭配副詞：<b>before</b>（以前）、<b>once / twice</b>（一次/兩次）、<b>ever</b>（曾經）、<b>never</b>（從未）。<br><i>例：I have been to Hawaii twice. (我曾去過夏威夷兩次)</i>",
+                    sentences: [
+                        { en: "I have met the mayor before.", jp: "我以前曾見過市長。（經驗）" },
+                        { en: "He has never eaten oysters.", jp: "他從未吃過生蠔。（經驗）" },
+                        { en: "We have already bought the tickets.", jp: "我們已經買好票了。（結束）" },
+                        { en: "The train has already left.", jp: "火車已經開走了。（結果・現在不在這了）" }
+                    ]
+                }
+            },
+            5: {
+                ja: {
+                    title: "Lesson 5: 現在完了 継続状態 / 現在完了進行形 (have been ＋ -ing)",
+                    explanation: "過去から現在まで<b>「ずっと～し続けている」</b>という継続を表す表現です。動詞の種類によって2つの形を使い分けます。<br><br><b>① 状態の継続 (現在完了形を使う)：</b><br>・状態を表す動詞（live, know, want, beなど）は、そのまま <b>have/has ＋過去分詞</b> を使います。<br><i>例：We have known each other since we were in kindergarten.<br>(私たちは幼稚園のときからずっと知り合いです。)</i><br><br><b>② 動作の継続 (現在完了進行形を使う)：</b><br>・一時的な動作を表す動詞（study, rain, play, waitなど）は、<b>have/has been ＋ 現在分詞(-ing)</b> を使います。<br>・「今もまさにそれをしている最中だ」という臨場感が出ます。<br><i>例：It has been raining for five days. (5日間ずっと雨が降り続いています[今も降っている])</i><br><br><b>★ since と for の使い分け：</b><br>・<b>since</b> ＋「いつからなのか」という<b>過去の起点</b>（例: since 2015, since last night）<br>・<b>for</b> ＋「どのくらいの期間なのか」という<b>時間の幅</b>（例: for a month, for two hours）",
+                    sentences: [
+                        { en: "We have known each other since we were in kindergarten.", jp: "私たちは幼稚園以来の知り合いです。（状態の継続）" },
+                        { en: "It has been raining for five days.", jp: "5日間、ずっと雨が降り続いています。（動作の継続）" },
+                        { en: "I have been waiting for him since this morning.", jp: "私は今朝からずっと彼を待っています。（動作の継続）" },
+                        { en: "My father has been driving for more than two hours.", jp: "私の父は2時間以上ずっと運転をしています。（動作の継続）" }
+                    ]
+                },
+                en: {
+                    title: "Lesson 5: Duration & Present Perfect Progressive (have been + -ing)",
+                    explanation: "To express a continuous state or action starting in the past and continuing up to the present, choose based on the verb type:<br><br><b>① Continuous State (Present Perfect):</b><br>Used with stative verbs (be, live, know, want). Form: <b>have/has + past participle</b>.<br><i>Example: We have known each other since childhood.</i><br><br><b>② Continuous Action (Present Perfect Progressive):</b><br>Used with action verbs (rain, wait, study, work). Form: <b>have/has been + -ing</b>.<br><i>Example: It has been raining for five days.</i><br><br><b>★ since vs. for:</b><br>・<b>since</b> + starting point (e.g., since Monday, since 2015)<br>・<b>for</b> + duration of time (e.g., for three hours, for two years)",
+                    sentences: [
+                        { en: "We have known each other since we were in kindergarten.", jp: "We have known each other since we were in kindergarten. (State)" },
+                        { en: "It has been raining for five days.", jp: "It has been raining for five days. (Action)" },
+                        { en: "I have been waiting for him since this morning.", jp: "I have been waiting for him since this morning. (Action)" },
+                        { en: "My father has been driving for more than two hours.", jp: "My father has been driving for more than two hours. (Action)" }
+                    ]
+                },
+                zh: {
+                    title: "Lesson 5: 持續狀態與現在完成進行式 (have been ＋ -ing)",
+                    explanation: "用來表示從過去某個時間點開始，一直<b>「持續到現在仍未中斷」</b>的狀態或動作。根據動詞的種類，分為兩種用法：<br><br><b>① 狀態的持續 (使用現在完成式)：</b><br>・搭配表示「狀態」的動詞（如 live, know, want, be）。結構：<b>have/has ＋ 過去分詞</b>。<br><i>例：We have known each other since we were in kindergarten.<br>(我們自從幼稚園時就一直互相認識。)</i><br><br><b>② 動作的持續 (使用現在完成進行式)：</b><br>・搭配表示「動作」的動詞（如 study, rain, play, wait）。結構：<b>have/has been ＋ 現在分詞(-ing)</b>。<br>・表示「直到說話當下，該動作仍持續在進行中」的強烈現場感。<br><i>例：It has been raining for five days. (雨已經連續下了五天了 [現在還在下])</i><br><br><b>★ since 與 for 的用法區分：</b><br>・<b>since</b> ＋「動作開始的時間點」（例：since 2015、since last night）<br>・<b>for</b> ＋「動作持續的總長度（時間寬度）」（例：for a month、for two hours）",
+                    sentences: [
+                        { en: "We have known each other since we were in kindergarten.", jp: "我們自從幼稚園以來就是好朋友。（狀態的持續）" },
+                        { en: "It has been raining for five days.", jp: "連續五天雨一直下個不停。（動作的持續進行）" },
+                        { en: "I have been waiting for him since this morning.", jp: "自從今天早上，我一直都在等他。（動作的持續進行）" },
+                        { en: "My father has been driving for more than two hours.", jp: "我父親已經連續開車超過兩個小時了。（動作的持續進行）" }
+                    ]
+                }
+            }
+        };
+
+        // Render the active classroom lesson
+        let currentLessonId = 1;
+
+        function showLesson(id) {
+            currentLessonId = id;
+            playSound('click');
+            
+            // Toggle active menu class
+            for (let i = 1; i <= 5; i++) {
+                const btn = document.getElementById(`lesson-btn-${i}`);
+                if (i === id) {
+                    btn.className = "w-full text-left px-4 py-3 rounded-xl text-sm font-bold transition-all bg-brand-50 text-brand-700 border-l-4 border-brand-500 shadow-sm";
+                } else {
+                    btn.className = "w-full text-left px-4 py-3 rounded-xl text-sm font-bold transition-all hover:bg-slate-50 text-slate-600";
+                }
+            }
+            renderClassroom();
+        }
+
+        function renderClassroom() {
+            const data = classroomDatabase[currentLessonId][currentLang];
+            const container = document.getElementById('lesson-content');
+            
+            let sentencesHTML = '';
+            data.sentences.forEach(s => {
+                sentencesHTML += `
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between gap-4">
+                        <div class="flex-1">
+                            <span class="block text-slate-800 font-extrabold text-sm">${s.en}</span>
+                            <span class="block text-slate-500 text-xs mt-1">${s.jp}</span>
+                        </div>
+                        <button onclick="speakSentence('${s.en.replace(/'/g, "\\'")}')" class="w-8 h-8 bg-brand-100 text-brand-700 hover:bg-brand-200 rounded-lg flex items-center justify-center transition-all">
+                            <i class="fa-solid fa-volume-high text-xs"></i>
+                        </button>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <h2 class="text-xl font-extrabold text-slate-800 tracking-tight">${data.title}</h2>
+                    <div class="text-sm leading-relaxed text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        ${data.explanation}
+                    </div>
+                    <div class="space-y-3">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Example Sentences & Audio Practice / 例文練習</h4>
+                        <div class="grid grid-cols-1 gap-2">
+                            ${sentencesHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+
+    <script>
+        // Worksheet Questions Database
+        const worksheetsDatabase = {
+            1: {
+                title: "Worksheet 1: Future Tense (will / be going to)",
+                desc: "Choose the correct verb conjugation based on the context rules. (will: spontaneous, expectation | be going to: prior arrangements)",
+                questions: [
+                    { id: 1, text: "My mum ______ busy tomorrow, so I'll help her.", opt: ["will be", "is going to"], ans: "will be" },
+                    { id: 2, text: "I already decided. I ______ join the badminton club.", opt: ["am going to", "will"], ans: "am going to" },
+                    { id: 3, text: "I ______ call you tonight! (Decided spontaneously right now)", opt: ["will", "am going to"], ans: "will" },
+                    { id: 4, text: "Sam isn't studying at all, so he probably ______ pass the exam.", opt: ["will not", "is not going to"], ans: "will not" },
+                    { id: 5, text: "Anna and Lucy ______ see a movie this Sunday. (Plans already made)", opt: ["are going to", "will"], ans: "are going to" },
+                    { id: 6, text: "I'm exhausted. I think I ______ go to bed early tonight.", opt: ["will", "am going to"], ans: "will" },
+                    { id: 7, text: "Josh ______ take part in PE today because he is injured.", opt: ["is not going to", "will not"], ans: "is not going to" },
+                    { id: 8, text: "The weather forecast says it ______ be cloudy tomorrow.", opt: ["will", "is going to"], ans: "will" },
+                    { id: 9, text: "Look at those dark clouds! It ______ rain very soon.", opt: ["is going to", "will"], ans: "is going to" },
+                    { id: 10, text: "I don't think she ______ come to the party tonight.", opt: ["will", "is going to"], ans: "will" }
+                ]
+            },
+            2: {
+                title: "Worksheet 2: Future Progressive (will be + -ing)",
+                desc: "Complete the sentence with the correct future progressive conjugation to express ongoing or pre-scheduled future actions.",
+                questions: [
+                    { id: 1, text: "I ______ (study) for the exam at this time tomorrow.", opt: ["will be studying", "will study"], ans: "will be studying" },
+                    { id: 2, text: "We ______ (stay) here for a couple of weeks next month.", opt: ["will be staying", "are going to stay"], ans: "will be staying" },
+                    { id: 3, text: "At 8 PM tonight, my family ______ (eat) cake together.", opt: ["will be eating", "is eating"], ans: "will be eating" },
+                    { id: 4, text: "In London, I ______ (meet) my family at the airport.", opt: ["will be meeting", "will meet"], ans: "will be meeting" },
+                    { id: 5, text: "Tomorrow morning, he ______ (drive) his car to Tokyo.", opt: ["will be driving", "is going to drive"], ans: "will be driving" },
+                    { id: 6, text: "Don't call me at 10 AM. I ______ (practice) tennis then.", opt: ["will be practicing", "will practice"], ans: "will be practicing" },
+                    { id: 7, text: "We ______ (watch) fireworks around this time next Sunday.", opt: ["will be watching", "are watching"], ans: "will be watching" },
+                    { id: 8, text: "This time next year, she ______ (study) abroad in Canada.", opt: ["will be studying", "is studying"], ans: "will be studying" },
+                    { id: 9, text: "In thirty minutes, they ______ (play) soccer in the rain.", opt: ["will be playing", "will play"], ans: "will be playing" },
+                    { id: 10, text: "My father ______ (work) in his office at 3 PM tomorrow.", opt: ["will be working", "works"], ans: "will be working" }
+                ]
+            },
+            3: {
+                title: "Worksheet 3: Time and Condition Clauses (when / if)",
+                desc: "Fill in the blank with the correct verb form (remember: use the present tense in time/condition clauses representing the future!).",
+                questions: [
+                    { id: 1, text: "We'll start the meeting when our teacher ______ back.", opt: ["comes", "will come"], ans: "comes" },
+                    { id: 2, text: "If it ______ tomorrow, we'll hold the ceremony in the gym.", opt: ["rains", "will rain"], ans: "rains" },
+                    { id: 3, text: "I will go to Mito when I ______ some free time.", opt: ["have", "will have"], ans: "have" },
+                    { id: 4, text: "She will buy me a tablet if I ______ perfect scores.", opt: ["get", "will get"], ans: "get" },
+                    { id: 5, text: "I won't speak Japanese until I ______ back to Japan.", opt: ["come", "will come"], ans: "come" },
+                    { id: 6, text: "If he ______ his homework, his mother will let him play games.", opt: ["finishes", "will finish"], ans: "finishes" },
+                    { id: 7, text: "We will make a brief stop when the train ______ at the station.", opt: ["arrives", "will arrive"], ans: "arrives" },
+                    { id: 8, text: "If you ______ this map, you will find the museum easily.", opt: ["use", "will use"], ans: "use" },
+                    { id: 9, text: "After she ______ high school, she will go to university.", opt: ["finishes", "will finish"], ans: "finishes" },
+                    { id: 10, text: "I will wait here until my friend ______.", opt: ["comes", "will come"], ans: "comes" }
+                ]
+            },
+            4: {
+                title: "Worksheet 4: Present Perfect (Completion & Experience)",
+                desc: "Identify whether completion or experience applies, and choose the correct Present Perfect helper and verb conjugation.",
+                questions: [
+                    { id: 1, text: "I ______ the mayor before. (Met him in the past)", opt: ["have met", "has met"], ans: "have met" },
+                    { id: 2, text: "We ______ already ______ the tickets. Let's go in!", opt: ["have / bought", "has / bought"], ans: "have / bought" },
+                    { id: 3, text: "He ______ never ______ oysters before.", opt: ["has / eaten", "have / eaten"], ans: "has / eaten" },
+                    { id: 4, text: "My parents ______ been to Hawaii several times.", opt: ["have", "has"], ans: "have" },
+                    { id: 5, text: "I ______ just ______ my report. I can sleep now!", opt: ["have / written", "has / written"], ans: "have / written" },
+                    { id: 6, text: "The train ______ already ______.", opt: ["has / left", "have / left"], ans: "has / left" },
+                    { id: 7, text: "I think I ______ my key. I can't find it!", opt: ["have lost", "has lost"], ans: "have lost" },
+                    { id: 8, text: "______ you ______ my message yet?", opt: ["Have / received", "Has / received"], ans: "Have / received" },
+                    { id: 9, text: "She ______ tried the puzzle many times, but can't solve it.", opt: ["has", "have"], ans: "has" },
+                    { id: 10, text: "Dave ______ to that safari park twice when he was a kid.", opt: ["went", "has been"], ans: "went" }
+                ]
+            },
+            5: {
+                title: "Worksheet 5: Continuation State & Perfect Progressive",
+                desc: "Complete the sentences of continuation using 'since' (起点) or 'for' (期間) and the correct perfect aspect helper.",
+                questions: [
+                    { id: 1, text: "Kate has been sick in bed ______ a month.", opt: ["for", "since"], ans: "for" },
+                    { id: 2, text: "I ______ lived in this city since 2015.", opt: ["have", "has"], ans: "have" },
+                    { id: 3, text: "I have been waiting for him ______ this morning.", opt: ["since", "for"], ans: "since" },
+                    { id: 4, text: "The baby ______ sleeping for three hours.", opt: ["has been", "have been"], ans: "has been" },
+                    { id: 5, text: "My father has been driving ______ more than two hours.", opt: ["for", "since"], ans: "for" },
+                    { id: 6, text: "We have known each other ______ we were in kindergarten.", opt: ["since", "for"], ans: "since" },
+                    { id: 7, text: "How long ______ you been studying English?", opt: ["have", "has"], ans: "have" },
+                    { id: 8, text: "Maya ______ looking after a kitten for two weeks.", opt: ["has been", "have been"], ans: "has been" },
+                    { id: 9, text: "Her uncle has lived in London ______ five years.", opt: ["for", "since"], ans: "for" },
+                    { id: 10, text: "It has been raining ______ yesterday afternoon.", opt: ["since", "for"], ans: "since" }
+                ]
+            },
+            6: {
+                title: "Worksheet 6: Comprehensive Review (Exam-Style Integration)",
+                desc: "Verify your final comprehensive review across all target lessons before Sept's exam. Standard exam patterns.",
+                questions: [
+                    { id: 1, text: "I'll help my father with the work if he ______ busy tomorrow.", opt: ["is", "will be"], ans: "is" },
+                    { id: 2, text: "Look at the time! The movie ______ already ______.", opt: ["has / started", "have / started"], ans: "has / started" },
+                    { id: 3, text: "We ______ (fly) home around this time the day after tomorrow.", opt: ["will be flying", "will fly"], ans: "will be flying" },
+                    { id: 4, text: "She ______ (never be) on an airplane before in her life.", opt: ["has never been", "have never been"], ans: "has never been" },
+                    { id: 5, text: "We will start the ceremony as soon as they ______.", opt: ["arrive", "will arrive"], ans: "arrive" },
+                    { id: 6, text: "How many times ______ you climbed Mt. Fuji?", opt: ["have", "has"], ans: "have" },
+                    { id: 7, text: "My sister has been talking on the phone ______ fifty minutes.", opt: ["for", "since"], ans: "for" },
+                    { id: 8, text: "I ______ not going to eat dinner tonight.", opt: ["am", "will"], ans: "am" },
+                    { id: 9, text: "Jane has been angry with me ______ last week.", opt: ["since", "for"], ans: "since" },
+                    { id: 10, text: "Maybe I ______ go to bed early tonight since I'm exhausted.", opt: ["will", "am going to"], ans: "will" }
+                ]
+            }
+        };
+
+        // Render current worksheet
+        function loadSelectedWorksheet() {
+            const index = document.getElementById('worksheet-select').value;
+            const data = worksheetsDatabase[index];
+            const container = document.getElementById('worksheet-container');
+
+            let questionsHTML = '';
+            data.questions.forEach((q, i) => {
+                let optionsHTML = '';
+                q.opt.forEach(o => {
+                    optionsHTML += `
+                        <button onclick="checkWorksheetAnswer(${index}, ${i}, '${o}')" id="ws-btn-${index}-${i}-${o.replace(/\s+/g, '')}" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl font-bold text-xs text-slate-700 transition-all text-left">
+                            ${o}
+                        </button>
+                    `;
+                });
+
+                questionsHTML += `
+                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-3">
+                        <div class="flex items-start justify-between gap-4">
+                            <div>
+                                <span class="text-xs font-bold text-slate-400">Q${q.id}</span>
+                                <p class="font-extrabold text-sm text-slate-800 mt-1">${q.text}</p>
+                            </div>
+                            <span id="ws-mark-${index}-${i}" class="text-lg"></span>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            ${optionsHTML}
+                        </div>
+                        <div id="ws-explain-${index}-${i}" class="text-xs font-semibold text-emerald-600 hidden"></div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <div class="border-b border-slate-100 pb-3">
+                        <h3 class="text-lg font-black text-indigo-900">${data.title}</h3>
+                        <p class="text-xs text-slate-500 mt-1">${data.desc}</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        ${questionsHTML}
+                    </div>
+                </div>
+            `;
+        }
+
+        function checkWorksheetAnswer(sheetId, questionIdx, selectedOption) {
+            const question = worksheetsDatabase[sheetId].questions[questionIdx];
+            const isCorrect = (selectedOption === question.ans);
+
+            // Fetch UI elements
+            const markElem = document.getElementById(`ws-mark-${sheetId}-${questionIdx}`);
+            const explainElem = document.getElementById(`ws-explain-${sheetId}-${questionIdx}`);
+            
+            // Highlight options
+            question.opt.forEach(o => {
+                const btn = document.getElementById(`ws-btn-${sheetId}-${questionIdx}-${o.replace(/\s+/g, '')}`);
+                if (o === question.ans) {
+                    btn.className = "px-4 py-2 bg-emerald-100 border border-emerald-300 rounded-xl font-bold text-xs text-emerald-700 transition-all text-left";
+                } else if (o === selectedOption && !isCorrect) {
+                    btn.className = "px-4 py-2 bg-rose-100 border border-rose-300 rounded-xl font-bold text-xs text-rose-700 transition-all text-left";
+                } else {
+                    btn.className = "px-4 py-2 bg-slate-100 border border-slate-200 rounded-xl font-bold text-xs text-slate-400 opacity-50 pointer-events-none transition-all text-left";
+                }
+            });
+
+            if (isCorrect) {
+                playSound('correct');
+                markElem.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i>`;
+                explainElem.textContent = `✓ Correct! standard: "${question.ans}"`;
+                explainElem.classList.remove('hidden');
+            } else {
+                playSound('wrong');
+                markElem.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600"></i>`;
+                explainElem.innerHTML = `✕ Try Again! standard: <span class="underline font-bold">${question.ans}</span>`;
+                explainElem.classList.remove('hidden');
+                explainElem.className = "text-xs font-semibold text-rose-600";
+            }
+        }
+    </script>
+
+    <script>
+        // Specific Target Drill Database containing exactly all 20 verbs from the Word file exam
+        const drillDatabase = [
+            { verb: "call", pp: "called", jp: "呼ぶ" },
+            { verb: "try", pp: "tried", jp: "試す" },
+            { verb: "eat", pp: "eaten", jp: "食べる" },
+            { verb: "do", pp: "done", jp: "〜する" },
+            { verb: "write", pp: "written", jp: "書く" },
+            { verb: "meet", pp: "met", jp: "会う" },
+            { verb: "visit", pp: "visited", jp: "訪ねる" },
+            { verb: "be", pp: "been", jp: "〜である・存在する" },
+            { verb: "see", pp: "seen", jp: "見る" },
+            { verb: "use", pp: "used", jp: "使う" },
+            { verb: "lie", pp: "lain", jp: "横たわる" },
+            { verb: "hear", pp: "heard", jp: "聞く" },
+            { verb: "buy", pp: "bought", jp: "買う" },
+            { verb: "talk", pp: "talked", jp: "話す" },
+            { verb: "climb", pp: "climbed", jp: "登る" },
+            { verb: "finish", pp: "finished", jp: "終える" },
+            { verb: "leave", pp: "left", jp: "去る・出発する" },
+            { verb: "receive", pp: "received", jp: "受け取る" },
+            { verb: "lose", pp: "lost", jp: "失う・なくす" },
+            { verb: "wait", pp: "waited", jp: "待つ" }
+        ];
+
+        let drillCurrentIndex = 0;
+        let drillCorrectCount = 0;
+        let drillStreak = 0;
+
+        function loadDrillQuestion() {
+            const data = drillDatabase[drillCurrentIndex];
+            document.getElementById('drill-index').textContent = drillCurrentIndex + 1;
+            document.getElementById('drill-base-verb').textContent = data.verb;
+            document.getElementById('drill-verb-meaning').textContent = data.jp;
+            document.getElementById('drill-input').value = "";
+            document.getElementById('drill-feedback').textContent = "";
+            
+            // Progress Bar
+            const percent = ((drillCurrentIndex + 1) / drillDatabase.length) * 100;
+            document.getElementById('drill-progress').style.width = `${percent}%`;
+            
+            document.getElementById('drill-input').focus();
+        }
+
+        function checkDrillAnswer() {
+            const inputVal = document.getElementById('drill-input').value.trim().toLowerCase();
+            const correctPP = drillDatabase[drillCurrentIndex].pp.toLowerCase();
+            const feedbackElem = document.getElementById('drill-feedback');
+
+            if (inputVal === correctPP) {
+                playSound('correct');
+                feedbackElem.className = "text-sm font-bold text-emerald-600 h-8";
+                feedbackElem.textContent = "Excellent! Correct (正解) 🎉";
+                
+                drillCorrectCount++;
+                drillStreak++;
+                document.getElementById('drill-correct-count').textContent = drillCorrectCount;
+                document.getElementById('drill-streak-count').textContent = drillStreak;
+
+                setTimeout(() => {
+                    nextDrillQuestion();
+                }, 1000);
+            } else {
+                playSound('wrong');
+                feedbackElem.className = "text-sm font-bold text-rose-600 h-8";
+                feedbackElem.innerHTML = `Incorrect. Correct form: <span class="underline font-black">${correctPP}</span>`;
+                
+                drillStreak = 0;
+                document.getElementById('drill-streak-count').textContent = drillStreak;
+            }
+        }
+
+        function nextDrillQuestion() {
+            drillCurrentIndex = (drillCurrentIndex + 1) % drillDatabase.length;
+            loadDrillQuestion();
+        }
+
+        function resetDrill() {
+            drillCurrentIndex = 0;
+            drillCorrectCount = 0;
+            drillStreak = 0;
+            document.getElementById('drill-correct-count').textContent = 0;
+            document.getElementById('drill-streak-count').textContent = 0;
+            loadDrillQuestion();
+        }
+    </script>
+
+    <script>
+        // Time Attack Quiz Database (10 questions matching exam prep goals)
+        const timeAttackDatabase = [
+            { text: "My father ______ come home late tonight because he is working.", opt: ["will", "is going to", "will be", "was"], ans: "will" },
+            { text: "I've already decided! I ______ join the badminton club.", opt: ["am going to", "will", "will be", "am"], ans: "am going to" },
+            { text: "I'll be studying for the exam at this time ______.", opt: ["tomorrow", "yesterday", "last week", "ago"], ans: "tomorrow" },
+            { text: "We'll start the meeting when our teacher ______ back.", opt: ["comes", "will come", "came", "is coming"], ans: "comes" },
+            { text: "If it ______ tomorrow, we'll hold the ceremony in the gym.", opt: ["rains", "will rain", "rained", "is going to rain"], ans: "rains" },
+            { text: "I have ______ the mayor before when I visited city hall.", opt: ["met", "meet", "meeting", "meets"], ans: "met" },
+            { text: "My parents have been to Hawaii ______ times.", opt: ["several", "never", "yet", "already"], ans: "several" },
+            { text: "The train ______ already left. Let's take the next express train.", opt: ["has", "have", "is", "was"], ans: "has" },
+            { text: "Kate has been sick in bed ______ a month.", opt: ["for", "since", "until", "during"], ans: "for" },
+            { text: "My father has been driving ______ more than two hours.", opt: ["for", "since", "until", "already"], ans: "for" }
+        ];
+
+        let taCurrentIndex = 0;
+        let taScore = 0;
+        let taHighScore = 0;
+        let taTimer = 25;
+        let taInterval = null;
+
+        function startQuiz() {
+            playSound('click');
+            document.getElementById('quiz-setup').classList.add('hidden');
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('quiz-game').classList.remove('hidden');
+            
+            taCurrentIndex = 0;
+            taScore = 0;
+            document.getElementById('quiz-score').textContent = taScore;
+            
+            loadQuizQuestion();
+        }
+
+        function loadQuizQuestion() {
+            if (taCurrentIndex >= timeAttackDatabase.length) {
+                endQuiz();
+                return;
+            }
+
+            const data = timeAttackDatabase[taCurrentIndex];
+            document.getElementById('quiz-index').textContent = taCurrentIndex + 1;
+            document.getElementById('quiz-question-text').textContent = data.text;
+
+            // Generate options
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+            
+            data.opt.forEach(o => {
+                optionsContainer.innerHTML += `
+                    <button onclick="submitQuizAnswer('${o}')" class="w-full p-4 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl font-bold text-sm text-slate-700 text-left transition-all active:scale-95">
+                        ${o}
+                    </button>
+                `;
+            });
+
+            // Timer setup
+            taTimer = 25;
+            document.getElementById('quiz-timer').textContent = taTimer;
+            document.getElementById('quiz-timer-bar').style.width = '100%';
+            
+            if (taInterval) clearInterval(taInterval);
+            taInterval = setInterval(() => {
+                taTimer--;
+                document.getElementById('quiz-timer').textContent = taTimer;
+                const percent = (taTimer / 25) * 100;
+                document.getElementById('quiz-timer-bar').style.width = `${percent}%`;
+
+                if (taTimer <= 0) {
+                    clearInterval(taInterval);
+                    submitQuizAnswer(null); // Timeout
+                }
+            }, 1000);
+        }
+
+        function submitQuizAnswer(selectedOption) {
+            clearInterval(taInterval);
+            const data = timeAttackDatabase[taCurrentIndex];
+            const isCorrect = (selectedOption === data.ans);
+
+            if (isCorrect) {
+                playSound('correct');
+                // Calculate sliding points: 20-25s -> 5pts, 15-19s -> 4pts, 10-14s -> 3pts, 5-9s -> 2pts, 1-4s -> 1pt
+                let points = 1;
+                if (taTimer >= 20) points = 5;
+                else if (taTimer >= 15) points = 4;
+                else if (taTimer >= 10) points = 3;
+                else if (taTimer >= 5) points = 2;
+
+                taScore += points;
+                document.getElementById('quiz-score').textContent = taScore;
+            } else {
+                playSound('wrong');
+            }
+
+            taCurrentIndex++;
+            setTimeout(() => {
+                loadQuizQuestion();
+            }, 800);
+        }
+
+        function endQuiz() {
+            document.getElementById('quiz-game').classList.add('hidden');
+            document.getElementById('quiz-result').classList.remove('hidden');
+            
+            document.getElementById('quiz-final-score-text').textContent = `You earned ${taScore} out of 50 possible speed points!`;
+            
+            if (taScore > taHighScore) {
+                taHighScore = taScore;
+                document.getElementById('quiz-high-score').textContent = taHighScore;
+            }
+        }
+    </script>
+
+    <script>
+        // Translation problems database
+        const translationProblems = [
+            {
+                jp: "彼は今カラオケを歌っています。/ 彼は数時間ずっとカラオケを歌い続けています。",
+                words: ["He", "is", "singing", "karaoke", "now.", "/", "He", "has", "been", "singing", "karaoke", "for", "a", "few", "hours."],
+                ans: "He is singing karaoke now. / He has been singing karaoke for a few hours."
+            },
+            {
+                jp: "彼女はすでに仕事へ行ってしまった。（今はもういない）",
+                words: ["She", "has", "already", "gone", "to", "work."],
+                ans: "She has already gone to work."
+            },
+            {
+                jp: "彼女はちょうど郵便局へ行って（戻って）きたところだ。",
+                words: ["She", "has", "just", "been", "to", "the", "post", "office."],
+                ans: "She has just been to the post office."
+            },
+            {
+                jp: "あなたはもう手を洗いましたか。 / 私はまだ手を洗っていません。",
+                words: ["Have", "you", "washed", "your", "hands", "yet?", "/", "I", "haven't", "washed", "my", "hands", "yet."],
+                ans: "Have you washed your hands yet? / I haven't washed my hands yet."
+            }
+        ];
+
+        let currentTransIdx = 0;
+        let transAssembly = [];
+
+        function changeTransProblem(idx) {
+            playSound('click');
+            currentTransIdx = idx;
+            transAssembly = [];
+            
+            // Highlight buttons
+            for (let i = 0; i < 4; i++) {
+                const btn = document.getElementById(`tp-btn-${i}`);
+                if (i === idx) {
+                    btn.className = "flex-1 py-2 rounded-lg font-bold text-xs bg-brand-600 text-white shadow-sm transition-all";
+                } else {
+                    btn.className = "flex-1 py-2 rounded-lg font-bold text-xs text-slate-500 hover:bg-white/50 transition-all";
+                }
+            }
+
+            renderTranslationProblem();
+        }
+
+        function renderTranslationProblem() {
+            const data = translationProblems[currentTransIdx];
+            document.getElementById('trans-japanese-target').textContent = data.jp;
+            document.getElementById('trans-feedback').textContent = "";
+
+            // Create word bank
+            const bank = document.getElementById('trans-word-bank');
+            bank.innerHTML = "";
+            
+            data.words.forEach((w, i) => {
+                bank.innerHTML += `
+                    <button onclick="placeWordBlock('${w}', ${i})" id="wb-btn-${i}" class="px-3 py-1.5 bg-white hover:bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700 rounded-lg shadow-sm transition-all">
+                        ${w}
+                    </button>
+                `;
+            });
+
+            renderBuildArea();
+        }
+
+        function placeWordBlock(word, idx) {
+            playSound('click');
+            transAssembly.push({ word, idx });
+            
+            // Disable in bank
+            const btn = document.getElementById(`wb-btn-${idx}`);
+            btn.classList.add('opacity-30', 'pointer-events-none');
+
+            renderBuildArea();
+        }
+
+        function removeWordBlock(assemblyIdx) {
+            playSound('click');
+            const item = transAssembly[assemblyIdx];
+            
+            // Re-enable in bank
+            const btn = document.getElementById(`wb-btn-${item.idx}`);
+            btn.classList.remove('opacity-30', 'pointer-events-none');
+
+            transAssembly.splice(assemblyIdx, 1);
+            renderBuildArea();
+        }
+
+        function renderBuildArea() {
+            const area = document.getElementById('trans-build-area');
+            area.innerHTML = "";
+
+            if (transAssembly.length === 0) {
+                area.innerHTML = `<span class="text-xs text-slate-400 font-bold" data-key="scaffold_empty">Click words from the Word Bank below to assemble...</span>`;
+                return;
+            }
+
+            transAssembly.forEach((item, i) => {
+                area.innerHTML += `
+                    <button onclick="removeWordBlock(${i})" class="px-3 py-1.5 bg-brand-600 text-white text-xs font-bold rounded-lg shadow-sm transition-all flex items-center gap-1.5 hover:bg-brand-700">
+                        ${item.word} <i class="fa-solid fa-circle-xmark text-[10px] opacity-75"></i>
+                    </button>
+                `;
+            });
+        }
+
+        function resetTransProblem() {
+            playSound('click');
+            transAssembly = [];
+            renderTranslationProblem();
+        }
+
+        function checkTransAnswer() {
+            const currentSentence = transAssembly.map(item => item.word).join(" ");
+            const targetSentence = translationProblems[currentTransIdx].ans;
+            const feedbackElem = document.getElementById('trans-feedback');
+
+            if (currentSentence === targetSentence) {
+                playSound('correct');
+                feedbackElem.className = "font-bold text-emerald-600 text-xs h-8 mt-2";
+                feedbackElem.textContent = "✓ Perfect Translation (正解) ! Well structured.";
+            } else {
+                playSound('wrong');
+                feedbackElem.className = "font-bold text-rose-600 text-xs h-8 mt-2";
+                feedbackElem.innerHTML = `✕ Incorrect order. Standard solution:<br><span class="underline font-black">${targetSentence}</span>`;
+            }
+        }
+    </script>
+
+    <script>
+        // Essay builder logic
+        let activeScaffoldPattern = 'future';
+
+        const scaffoldData = {
+            future: {
+                ja: {
+                    inputs: [
+                        { label: "1. Destination Country / 国 (e.g. America, Australia)", placeholder: "America", id: "sc-dest" },
+                        { label: "2. Goal / 旅行の目的 (e.g. study, watch movies, swim)", placeholder: "study English", id: "sc-goal" },
+                        { label: "3. Companion / 同伴者 (e.g. my family, friends)", placeholder: "my family", id: "sc-with" },
+                        { label: "4. Future Progressive schedule / 予定している事 (e.g. sightseeing)", placeholder: "visiting museums", id: "sc-doing" }
+                    ],
+                    template: (vals) => `I will go to ${vals[0] || "[Destination]"} because I'm going to ${vals[1] || "[Goal]"} there with ${vals[2] || "[Companion]"}. After that, we'll be ${vals[3] || "[Future Progressive Action]"} in the capital.`
+                },
+                perfect: {
+                    ja: {
+                        inputs: [
+                            { label: "1. Topic / これまでやった事 (e.g. climbing Mt. Fuji, playing tennis)", placeholder: "playing tennis", id: "sc-exp" },
+                            { label: "2. Frequency / 回数 (e.g. twice, three times, many times)", placeholder: "many times", id: "sc-freq" },
+                            { label: "3. Starting Point / 始めた時期 (e.g. 2020, elementary school)", placeholder: "I was in junior high school", id: "sc-since" },
+                            { label: "4. Study/Practice Duration / 継続している時間 (e.g. three years)", placeholder: "three years", id: "sc-dur" }
+                        ],
+                        template: (vals) => `I have tried ${vals[0] || "[Experience]"} ${vals[1] || "[Frequency]"} since ${vals[2] || "[Starting Point]"}. For my exam preparation, I have been practicing for ${vals[3] || "[Duration]"} daily.`
+                    }
+                }
+            }
+        };
+
+        function setScaffoldPattern(pattern) {
+            playSound('click');
+            activeScaffoldPattern = pattern;
+            
+            const btnFuture = document.getElementById('sc-btn-future');
+            const btnPerfect = document.getElementById('sc-btn-perfect');
+
+            if (pattern === 'future') {
+                btnFuture.className = "py-2.5 px-3 rounded-xl font-bold text-xs bg-indigo-50 text-indigo-700 border border-indigo-200 transition-all text-left";
+                btnPerfect.className = "py-2.5 px-3 rounded-xl font-bold text-xs text-slate-600 hover:bg-slate-50 border border-slate-200 transition-all text-left";
+            } else {
+                btnPerfect.className = "py-2.5 px-3 rounded-xl font-bold text-xs bg-indigo-50 text-indigo-700 border border-indigo-200 transition-all text-left";
+                btnFuture.className = "py-2.5 px-3 rounded-xl font-bold text-xs text-slate-600 hover:bg-slate-50 border border-slate-200 transition-all text-left";
+            }
+
+            renderScaffoldForm();
+        }
+
+        function renderScaffoldForm() {
+            const config = scaffoldData[activeScaffoldPattern].ja;
+            const container = document.getElementById('scaffold-form-container');
+            
+            let inputsHTML = '';
+            config.inputs.forEach(inp => {
+                inputsHTML += `
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wide block">${inp.label}</label>
+                        <input type="text" id="${inp.id}" oninput="updateScaffoldOutput()" placeholder="${inp.placeholder}" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl font-medium text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    </div>
+                `;
+            });
+
+            container.innerHTML = inputsHTML;
+            updateScaffoldOutput();
+        }
+
+        function updateScaffoldOutput() {
+            const config = scaffoldData[activeScaffoldPattern].ja;
+            const vals = config.inputs.map(inp => document.getElementById(inp.id)?.value || "");
+            
+            const text = config.template(vals);
+            document.getElementById('scaffold-output-text').textContent = text;
+        }
+
+        function copyCompositionText() {
+            playSound('click');
+            const text = document.getElementById('scaffold-output-text').textContent;
+            
+            // standard robust clipboard copy (fallback standard)
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            alert("Essay copied to clipboard! (クリップボードにコピーしました)");
+        }
+    </script>
+
+    <script>
+        // High fidelity mock exam questions & answers database (Sections 1 to 8 matching the exam structure)
+        const mockQuestionsData = {
+            parts: [
+                {
+                    title: "Part 1: Future conjugations fill-in (10 points)",
+                    q: [
+                        { id: 1, type: "input", text: "I ______ (call) you tonight because I already got my schedule.", ans: "will call" },
+                        { id: 2, type: "input", text: "My mother ______ (be) busy tomorrow morning.", ans: "will be" },
+                        { id: 3, type: "input", text: "I am ______ (go / join) the soccer club next week.", ans: "going to join" },
+                        { id: 4, type: "input", text: "I am not ______ (go / live) in Canada next year.", ans: "going to live" },
+                        { id: 5, type: "input", text: "Maybe I ______ (go) to bed early since I'm exhausted.", ans: "will go" }
+                    ]
+                },
+                {
+                    title: "Part 2: Future Progressive (10 points)",
+                    q: [
+                        { id: 6, type: "input", text: "I ______ (study) for the exam at this time tomorrow.", ans: "will be studying" },
+                        { id: 7, type: "input", text: "In London, I ______ (meet) my family at the airport.", ans: "will be meeting" },
+                        { id: 8, type: "input", text: "After that, she ______ (eat) birthday cake with her family.", ans: "will be eating" }
+                    ]
+                },
+                {
+                    title: "Part 3: Past Participles conjugation drill (20 points)",
+                    q: [
+                        { id: 9, type: "input", text: "Past participle of: be", ans: "been" },
+                        { id: 10, type: "input", text: "Past participle of: eat", ans: "eaten" },
+                        { id: 11, type: "input", text: "Past participle of: lie", ans: "lain" },
+                        { id: 12, type: "input", text: "Past participle of: leave", ans: "left" },
+                        { id: 13, type: "input", text: "Past participle of: write", ans: "written" }
+                    ]
+                },
+                {
+                    title: "Part 4: Present Perfect aspects (10 points)",
+                    q: [
+                        { id: 14, type: "input", text: "I ______ (meet) the mayor before.", ans: "have met" },
+                        { id: 15, type: "input", text: "He ______ (never / eat) oysters.", ans: "has never eaten" },
+                        { id: 16, type: "input", text: "The train ______ already ______ (leave).", ans: "has / left" }
+                    ]
+                },
+                {
+                    title: "Part 5: Perfect Continuation Aspect (10 points)",
+                    q: [
+                        { id: 17, type: "input", text: "Kate has been sick in bed ______ (for / since) a month.", ans: "for" },
+                        { id: 18, type: "input", text: "I have been waiting for him ______ (for / since) this morning.", ans: "since" },
+                        { id: 19, type: "input", text: "My father ______ (drive) for more than two hours.", ans: "has been driving" }
+                    ]
+                },
+                {
+                    title: "Part 6: Structured Re-ordering (20 points)",
+                    q: [
+                        { id: 20, type: "input", text: "Reorder: We ( soon / a / make / will ) a stop. => We ______ a stop.", ans: "will soon make" },
+                        { id: 21, type: "input", text: "Reorder: We'll start when ( comes / our / back / teacher ). => We'll start when ______.", ans: "our teacher comes back" },
+                        { id: 22, type: "input", text: "Reorder: ( rains / tomorrow / it / if ), we'll stay home. => ______ we'll stay home.", ans: "If it rains tomorrow" }
+                    ]
+                }
+            ]
+        };
+
+        function startMockExam() {
+            playSound('click');
+            document.getElementById('mock-start').classList.add('hidden');
+            document.getElementById('mock-results').classList.add('hidden');
+            document.getElementById('mock-exam-live').classList.remove('hidden');
+
+            renderMockQuestions();
+        }
+
+        function renderMockQuestions() {
+            const container = document.getElementById('mock-questions-container');
+            container.innerHTML = "";
+
+            mockQuestionsData.parts.forEach((part, partIdx) => {
+                let partQuestionsHTML = '';
+                part.q.forEach((q, qIdx) => {
+                    partQuestionsHTML += `
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-bold text-slate-700 block">Question ${q.id}: ${q.text}</label>
+                            <input type="text" id="mock-input-${partIdx}-${qIdx}" placeholder="Type solution..." class="w-full max-w-md px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                    `;
+                });
+
+                container.innerHTML += `
+                    <div class="space-y-4 border-b border-slate-100 pb-6 last:border-b-0">
+                        <h3 class="text-sm font-black text-indigo-900 bg-indigo-50 px-3 py-2 rounded-lg flex items-center justify-between">
+                            <span>${part.title}</span>
+                        </h3>
+                        <div class="space-y-3 pl-1">
+                            ${partQuestionsHTML}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function submitMockExam() {
+            playSound('click');
+            
+            let totalScore = 0;
+            let errorLogs = [];
+
+            mockQuestionsData.parts.forEach((part, partIdx) => {
+                part.q.forEach((q, qIdx) => {
+                    const inputVal = document.getElementById(`mock-input-${partIdx}-${qIdx}`).value.trim().toLowerCase();
+                    const correctAns = q.ans.toLowerCase();
+                    
+                    // Simple lenient matching (ignoring extra space)
+                    const normalizedInput = inputVal.replace(/\s+/g, '');
+                    const normalizedAns = correctAns.replace(/\s+/g, '');
+
+                    if (normalizedInput === normalizedAns) {
+                        totalScore += 5.5; // Scale to reach ~100 max
+                    } else {
+                        errorLogs.push({
+                            id: q.id,
+                            text: q.text,
+                            yourAns: inputVal || "(Empty)",
+                            correctAns: q.ans
+                        });
+                    }
+                });
+            });
+
+            // Cap total score to 100
+            totalScore = Math.min(100, Math.round(totalScore));
+
+            // Hide/show screen
+            document.getElementById('mock-exam-live').classList.add('hidden');
+            document.getElementById('mock-results').classList.remove('hidden');
+
+            document.getElementById('mock-score-text').textContent = `${totalScore} / 100`;
+            
+            // Grading rank text
+            let rank = "Excellent! (合格ラインクリア)";
+            let rankColor = "text-emerald-600";
+            if (totalScore < 60) {
+                rank = "Needs Study (もう一度特訓しよう！)";
+                rankColor = "text-rose-600";
+            } else if (totalScore < 80) {
+                rank = "Good (合格可能ライン！)";
+                rankColor = "text-amber-600";
+            }
+            
+            const rankText = document.getElementById('mock-rank-text');
+            rankText.textContent = rank;
+            rankText.className = `text-2xl font-bold ${rankColor}`;
+
+            // Render error summaries
+            const errorContainer = document.getElementById('mock-error-logs');
+            errorContainer.innerHTML = "";
+
+            if (errorLogs.length === 0) {
+                errorContainer.innerHTML = `<div class="p-4 bg-emerald-50 text-emerald-700 font-extrabold text-xs rounded-xl border border-emerald-100">🎉 Perfect score! No mistakes made. You are fully ready for the September exam!</div>`;
+            } else {
+                errorLogs.forEach(err => {
+                    errorContainer.innerHTML += `
+                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 space-y-1 text-xs">
+                            <div class="font-extrabold text-slate-700">Question ${err.id}: ${err.text}</div>
+                            <div class="text-rose-600">Your answer: "${err.yourAns}"</div>
+                            <div class="text-emerald-600 font-bold">Standard Correct: "${err.correctAns}"</div>
+                        </div>
+                    `;
+                });
+            }
+        }
+    </script>
+
+    <script>
+        // Tab switching logic
+        function switchTab(tabId) {
+            playSound('click');
+            
+            // Hide all sections
+            ['guide', 'worksheets', 'past_participle', 'time_attack', 'translation', 'mock_exam'].forEach(id => {
+                document.getElementById(`section-${id}`).classList.add('hidden');
+                
+                // Reset tab button states
+                const tabBtn = document.getElementById(`tab-${id}`);
+                tabBtn.className = "flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm transition-all bg-white hover:bg-slate-100 text-slate-600 shrink-0";
+            });
+
+            // Show active section
+            document.getElementById(`section-${tabId}`).classList.remove('hidden');
+            
+            // Highlight active tab button
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            activeBtn.className = "flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm transition-all bg-brand-600 text-white shadow-md shadow-brand-200 shrink-0";
+
+            // Trigger internal page resets or initializations
+            if (tabId === 'past_participle') {
+                resetDrill();
+            } else if (tabId === 'time_attack') {
+                document.getElementById('quiz-setup').classList.remove('hidden');
+                document.getElementById('quiz-game').classList.add('hidden');
+                document.getElementById('quiz-result').classList.add('hidden');
+                if (taInterval) clearInterval(taInterval);
+            } else if (tabId === 'translation') {
+                changeTransProblem(0);
+                setScaffoldPattern('future');
+            } else if (tabId === 'mock_exam') {
+                document.getElementById('mock-start').classList.remove('hidden');
+                document.getElementById('mock-exam-live').classList.add('hidden');
+                document.getElementById('mock-results').classList.add('hidden');
+            }
+        }
+
+        // Initialize App on load
+        window.onload = function() {
+            showLesson(1);
+            loadSelectedWorksheet();
+            renderTranslationProblem();
+            renderScaffoldForm();
+        };
+    </script>
+</body>
+</html>
